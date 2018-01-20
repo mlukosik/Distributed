@@ -28,7 +28,6 @@ func neigh(i int, ch chan vertexStruct, adj_list map[int][]vertexStruct, visited
 	for j := 0; j < len(adj_list[i]); j++ {
 		visited[i] = 1
 
-	//	time.Sleep(100*time.Millisecond)
 		if parent[adj_list[i][j].vertexID - 1] == 0 {
 			adj_list[i][j].mainID = i
 			adj_list[i][j].parentID = i
@@ -41,8 +40,6 @@ func neigh(i int, ch chan vertexStruct, adj_list map[int][]vertexStruct, visited
 
 func bfs(i int, ch chan vertexStruct, adj vertexStruct, visited []int, j int, adj_list map[int][]vertexStruct, parent []int, vertexArray []singleVertex) {
 
-	//time.Sleep(100*time.Millisecond)
-	
 	if visited[i] == 0 {
 		parent[adj.vertexID-1] = j
 		vertexArray[adj.vertexID-1].parent = j
@@ -92,30 +89,19 @@ func main() {
 	parent[0] = 1
 
 	channel := make(chan vertexStruct)
-/*
-	var channels = []chan vertexStruct
-	for i := range channels {
-		chaneels[i] = make(chan vertexStruct)
-	}
-*/
 
-	//time.Sleep(200*time.Millisecond)
 	go neigh(1, channel, adj_list, visited, parent, vertexArray)
-
 
 	for i := 0; i < n-1; i++ {
 		time.Sleep(1* time.Millisecond)
 		select {
 			case msg := <-channel:
-				//if parent[msg.vertexID-1] == 0 { 
 					parent[msg.vertexID-1] = msg.parentID
-//					msg.children = append(msg.children, 
-					//fmt.Printf("Wierzchołek: %d Rodzic: %d\n", msg.vertexID, msg.parentID)
-			//	}
 			default:
 				fmt.Println("ok")
 		}
 	}
+
 	for i := range vertexArray {
 		fmt.Printf("Wierzchołek: %d Rodzic: %d Dzieci: %v\n", vertexArray[i].id, vertexArray[i].parent, vertexArray[i].children)
 	}
